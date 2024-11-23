@@ -14,23 +14,13 @@
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
-            "16": "img/icon.png",
-            "48": "img/icon.png",
-            "128": "img/icon.png"
+            "16": "assets/icon.png",
+            "48": "assets/icon.png",
+            "128": "assets/icon.png"
         }
     },
-    "content_scripts": [
-        {
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "content.bundle.js"
-            ]
-        }
-    ],
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "background.bundle.js"
     },
     "browser_specific_settings": {
         "gecko": {
