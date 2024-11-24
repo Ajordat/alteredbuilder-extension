@@ -1,0 +1,33 @@
+
+:root {
+    --bg-color: #FFFEFC;
+    --color: #3D331D;
+    --cta-border-radius: 16px;
+    --btn-bg-color: #DDBF5F;
+    --cta-border-color: var(--btn-bg-color);
+}
+
+body {
+    font-family: "Gabriela", Verdana, Tahoma, Geneva, sans-serif;
+    min-width: 450px;
+    background-color: var(--bg-color);
+    color: var(--color);
+}
+
+textarea.form-control {
+    border-radius: var(--cta-border-radius);
+    border-bottom-right-radius: 0;
+    --bs-border-color: var(--cta-border-color);
+}
+
+a.btn {
+    border-radius: var(--cta-border-radius);
+    background-color: var(--btn-bg-color);
+    transition: 0.1s;
+}
+
+a.btn:hover {
+    background-color: var(--btn-bg-color);
+    opacity: 0.9;
+    box-shadow: 0 0 8px var(--btn-bg-color);
+}

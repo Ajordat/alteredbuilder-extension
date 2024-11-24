@@ -1,33 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
     <head>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                padding: 10px;
-            }
-
-            select,
-            button {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-        </style>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>My Extension Popup</title>
     </head>
 
     <body>
-        <h2>Deck Importer</h2>
-        <label for="deck-select">Select Deck:</label>
-        <select id="deck-select"></select>
-        <label><input type="checkbox" id="setting1"> Enable Setting 1</label><br>
-        <label><input type="checkbox" id="setting2"> Enable Setting 2</label><br>
-        <button id="import-button">Import Deck</button>
+        <div class="container p-3">
 
-        <button id="login-button">Log In</button>
-        <p id="status"></p>
-        <button id="logout-button">Log Out</button>
+            <h1>Altered TCG Deck Importer</h1>
+            <div id="error-container">
+                <div class="mt-3">
+                    Go to the official deckbuilding site to import a deck.
+                </div>
+                <a class="btn mt-3" href="https://www.altered.gg/en-us/decks" target="_blank">Official site</a>
+            </div>
+            <div id="main-container">
+                <div class="mt-3">
+                    <label class="form-label" for="decklist-text">Paste your decklist:</label>
+                    <textarea id="decklist-text" class="form-control" rows="7" placeholder="1 ALT_CORE_B_LY_01_C&#10;2 ALT_CORE_B_LY_06_C&#10;1 ALT_CORE_B_LY_06_R1&#10;3 ALT_CORE_B_LY_09_R1&#10;..."></textarea>
+                </div>
+                <a id="import-button" class="btn mt-3">Import Deck</a>
+            </div>
 
+        </div>
         <script src="popup.bundle.js"></script>
     </body>
 
