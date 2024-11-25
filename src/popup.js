@@ -30,17 +30,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     importButton.addEventListener("click", async () => {
-        const decklist = document.getElementById("decklist-text").value;
+        const deckNameEl = document.getElementById("deck-name");
+        const decklistEl = document.getElementById("decklist-text");
+        let isInvalid = false;
+
+        if (deckNameEl.value.trim() === "") {
+            deckNameEl.classList.add("is-invalid");
+            deckNameEl.classList.remove("is-valid");
+            isInvalid = true;
+        } else {
+            deckNameEl.classList.add("is-valid");
+            deckNameEl.classList.remove("is-invalid");
+        }
+
+        if (decklistEl.value.trim() === "") {
+            decklistEl.classList.add("is-invalid");
+            decklistEl.classList.remove("is-valid");
+            isInvalid = true;
+        } else {
+            decklistEl.classList.remove("is-invalid");
+            decklistEl.classList.add("is-valid");
+        }
+
+        if (isInvalid) {
+            return;
+        }
 
         browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             console.log(tabs);
-            console.log("decklist: " + decklist)
+            console.log("decklist: " + decklistEl.value)
             const currentTab = tabs[0];
 
             browser.scripting.executeScript({
                 target: { tabId: currentTab.id },
                 func: importDeck,
-                args: [decklist]
+                args: [decklistEl.value, deckNameEl.value]
             }).then(() => {
                 console.log("Script executed successfully")
             }).catch((error) => {
@@ -50,16 +74,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 });
 
-async function importDeck(decklistText) {
+async function importDeck(decklistText, deckName) {
 
     console.log("inside:" + decklistText);
+    console.log("deck name: " + deckName);
 
     if (typeof browser === "undefined") {
         var browser = chrome;
     }
 
     browser.runtime.sendMessage({
-        action: 'importDeck', decklist: decklistText
+        action: 'importDeck', decklist: decklistText, deckName: deckName
     }).then(response => {
         console.log("Response from background script:", response);
     }).catch(error => {

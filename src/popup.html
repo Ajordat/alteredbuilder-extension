@@ -19,8 +19,19 @@
             </div>
             <div id="main-container">
                 <div class="mt-3">
+                    <input id="deck-name" type="text" class="form-control mb-2" aria-describedby="deck-name-validation"
+                        aria-label="Name of the deck" placeholder="Deck Name" required>
+                    <div id="deck-name-validation" class="invalid-feedback ms-5">
+                        Please write a name.
+                    </div>
+                </div>
+                <div class="mt-3">
                     <label class="form-label" for="decklist-text">Paste your decklist:</label>
-                    <textarea id="decklist-text" class="form-control" rows="7" placeholder="1 ALT_CORE_B_LY_01_C&#10;2 ALT_CORE_B_LY_06_C&#10;1 ALT_CORE_B_LY_06_R1&#10;3 ALT_CORE_B_LY_09_R1&#10;...">1 ALT_COREKS_B_MU_01_C&#10;1 ALT_CORE_B_LY_05_R2&#10;1 ALT_CORE_B_LY_24_R2</textarea>
+                    <textarea id="decklist-text" class="form-control" rows="7" aria-describedby="decklist-text-validation"
+                        placeholder="1 ALT_CORE_B_LY_01_C&#10;2 ALT_CORE_B_LY_06_C&#10;1 ALT_CORE_B_LY_06_R1&#10;3 ALT_CORE_B_LY_09_R1&#10;...">1 ALT_COREKS_B_MU_01_C&#10;1 ALT_CORE_B_LY_05_R2&#10;1 ALT_CORE_B_LY_24_R2</textarea>
+                    <div id="decklist-text-validation" class="invalid-feedback ms-5">
+                        Please paste a decklist.
+                    </div>
                 </div>
                 <a id="import-button" class="btn mt-3">Import Deck</a>
             </div>

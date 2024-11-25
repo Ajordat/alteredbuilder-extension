@@ -14,10 +14,12 @@ body {
     color: var(--color);
 }
 
-textarea.form-control {
+.form-control {
     border-radius: var(--cta-border-radius);
-    border-bottom-right-radius: 0;
     --bs-border-color: var(--cta-border-color);
+}
+textarea.form-control {
+    border-bottom-right-radius: 0;
 }
 
 a.btn {

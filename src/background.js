@@ -53,13 +53,13 @@ async function addCards(deck, accessToken) {
     console.log(apiResponse);
 }
 
-function parseDecklist(decklist) {
+function parseDecklist(decklist, name, message) {
     console.log(decklist);
 
     return {
         hero: decklist.split("\n", 1)[0].split(" ")[1].replace("COREKS", "CORE"),
         cards: decklist.split("\n").slice(1).map((x) => ({ quantity: parseInt(x.split(" ")[0]), card: `/cards/${x.split(" ")[1]}` })),
-        name: "TEST",
+        name: name,
         public: false
     }
 }
@@ -69,7 +69,7 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     if (message.action === "importDeck") {
         console.log("Received importDeck action")
         
-        let deck = parseDecklist(message.decklist);
+        let deck = parseDecklist(message.decklist, message.deckName, message);
         console.log(deck)
 
         try {
