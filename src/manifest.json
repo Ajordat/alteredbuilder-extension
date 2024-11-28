@@ -5,11 +5,9 @@
     "description": "Import decks from the Altered TCG Builder to the official website.",
     "permissions": [
         "scripting",
-        "activeTab",
-        "cookies"
+        "activeTab"
     ],
     "host_permissions": [
-        "https://altered.gg/*",
         "https://*.altered.gg/*"
     ],
     "background": {
@@ -23,12 +21,6 @@
             "128": "assets/icon.png"
         }
     },
-    "content_scripts": [
-        {
-            "matches": ["https://altered.gg/*"],
-            "js": ["content.bundle.js"]
-        }
-    ],
     "browser_specific_settings": {
         "gecko": {
             "id": "altered-tcg-builder@ajordat.com",

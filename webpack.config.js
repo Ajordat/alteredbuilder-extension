@@ -6,7 +6,6 @@ module.exports = {
     entry: {
         popup: './src/popup.js', // Entry point for popup script
         background: './src/background.js', // Entry point for background script
-        content: "./src/content.js" // Add content.js to the entry points
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
