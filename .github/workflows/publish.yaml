@@ -1,0 +1,37 @@
+name: Publish Chrome store
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create dist folder
+        run: npm run build
+
+      - uses: vimtor/action-zip@v1.2
+        with:
+          files: dist/
+          recursive: true
+          dest: release.zip
+
+      - name: Upload to Chrome Web Store
+        uses: mobilefirstllc/cws-publish@latest
+        with:
+          action: 'upload' 
+          client_id: ${{ secrets.CLIENT }}
+          client_secret: ${{ secrets.SECRET }}
+          refresh_token: ${{ secrets.TOKEN }}
+          extension_id: ${{ secrets.EXTENSION_ID }}
+          zip_file: 'release.zip'
