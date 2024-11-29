@@ -1,7 +1,7 @@
 {
     "name": "alteredbuilder-extension",
     "version": "1.0.0",
-    "description": "",
+    "description": "Import decks from the Altered TCG Builder to the official website",
     "main": "index.js",
     "scripts": {
         "build": "webpack --mode production",
