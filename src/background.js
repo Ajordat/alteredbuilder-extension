@@ -65,7 +65,7 @@ function parseDecklist(decklist, name, actions) {
     }
 
     let cardEntries = decklist.split("\n").slice(1);
-    if (actions.removeUniques) {
+    if (actions.excludeUniques) {
         cardEntries = cardEntries.filter(entry => !entry.includes("_U_"));
     }
 
