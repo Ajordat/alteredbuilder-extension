@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     importButton.addEventListener("click", async () => {
         const deckNameEl = document.getElementById("deck-name");
         const decklistEl = document.getElementById("decklist-text");
+        const removeUniquesEl = document.getElementById("remove-uniques");
         let isInvalid = false;
 
         let decklist = decklistEl.value.trim();
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         browser.runtime.sendMessage({
-            action: 'importDeck', decklist: decklist, deckName: deckName
+            action: 'importDeck', decklist: decklist, deckName: deckName, actions: {removeUniques: removeUniquesEl.checked }
         }).then(response => {
             if (response.success === true) {
                 chrome.tabs.create({ url: response.url });

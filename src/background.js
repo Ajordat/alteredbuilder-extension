@@ -49,25 +49,29 @@ async function addCards(deck, accessToken) {
         body: JSON.stringify({ putOption: "update", cards: deck.cards }),
     });
 
-    const responseObject = await response.json();
     if (!response.ok) {
-        throw new Error("Failed to add cards. Is the format of each line correct? (e.g. \"3 ALT_CORE_B_LY_13_R1\")");
+        throw new Error("Failed to add cards. Is the format of each line correct?\n(e.g. \"3 ALT_CORE_B_LY_13_R1\")");
     }
 }
 
-function parseDecklist(decklist, name) {
+function parseDecklist(decklist, name, actions) {
 
     // Convert the hero to the CORE set
     let [faction, id, rarity] = decklist.split("\n", 1)[0].split("_").slice(3);
 
     if (!["01", "02", "03"].includes(id) || rarity !== "C") {
         console.error(`Invalid hero code ${decklist.split("\n", 1)[0].split(" ")[1]}`);
-        throw new Error("The first line must be a valid hero reference\n (e.g. \"1 ALT_CORE_B_MU_01_C\")");
+        throw new Error("The first line must be a valid hero reference\n(e.g. \"1 ALT_CORE_B_MU_01_C\")");
+    }
+
+    let cardEntries = decklist.split("\n").slice(1);
+    if (actions.removeUniques) {
+        cardEntries = cardEntries.filter(entry => !entry.includes("_U_"));
     }
 
     return {
         hero: `ALT_CORE_B_${faction}_${id}_${rarity}`,
-        cards: decklist.split("\n").slice(1).map((x) => ({ quantity: parseInt(x.split(" ")[0]), card: `/cards/${x.split(" ")[1]}` })),
+        cards: cardEntries.map((x) => ({ quantity: parseInt(x.split(" ")[0]), card: `/cards/${x.split(" ")[1]}` })),
         name: name,
         public: false
     }
@@ -78,7 +82,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         (async () => {
             try {
-                let deck = parseDecklist(message.decklist, message.deckName);
+                let deck = parseDecklist(message.decklist, message.deckName, message.actions);
 
                 const token = await getNextAuthToken();
                 deck.id = await createBaseDeck(deck, token);
