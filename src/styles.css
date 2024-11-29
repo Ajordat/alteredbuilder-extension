@@ -21,6 +21,15 @@ body {
 textarea.form-control {
     border-bottom-right-radius: 0;
 }
+input.form-check-input {
+    border: var(--bs-border-width) solid var(--cta-border-color);
+    color: var(--bg-color);
+}
+input.form-check-input:checked {
+    background-color: var(--cta-border-color);
+    border-color: var(--cta-border-color);
+}
+
 
 a.btn {
     border-radius: var(--cta-border-radius);
