@@ -10,9 +10,12 @@ browser.runtime.onInstalled.addListener(() => {
 async function getNextAuthToken() {
     const response = await fetch("https://www.altered.gg/api/auth/session", { credentials: "include" });
     if (!response.ok) {
-        throw new Error("Failed to retrieve token");
+        throw new Error("Failed to authenticate.");
     }
     const data = await response.json();
+    if (data.accessToken == undefined) {
+        throw new Error("Failed to authenticate. Are you logged in?");
+    }
     return data.accessToken;
 }
 
@@ -30,15 +33,14 @@ async function createBaseDeck(deck, accessToken) {
     if (!response.ok) {
         throw new Error("Failed to import deck");
     }
-    console.log(response);
+
     const responseObject = await response.json()
-    console.log(responseObject)
     return responseObject.id;
 }
 
 async function addCards(deck, accessToken) {
 
-    const apiResponse = await fetch(`https://api.altered.gg/deck_user_lists/${deck.id}/add_cards`, {
+    const response = await fetch(`https://api.altered.gg/deck_user_lists/${deck.id}/add_cards`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -47,44 +49,51 @@ async function addCards(deck, accessToken) {
         body: JSON.stringify({ putOption: "update", cards: deck.cards }),
     });
 
-    if (!apiResponse.ok) {
-        throw new Error("Failed to import deck");
+    const responseObject = await response.json();
+    if (!response.ok) {
+        throw new Error("Failed to add cards. Is the format of each line correct? (e.g. \"3 ALT_CORE_B_LY_13_R1\")");
     }
-    console.log(apiResponse);
 }
 
-function parseDecklist(decklist, name, message) {
-    console.log(decklist);
+function parseDecklist(decklist, name) {
+
+    // Convert the hero to the CORE set
+    let [faction, id, rarity] = decklist.split("\n", 1)[0].split("_").slice(3);
+
+    if (!["01", "02", "03"].includes(id) || rarity !== "C") {
+        console.error(`Invalid hero code ${decklist.split("\n", 1)[0].split(" ")[1]}`);
+        throw new Error("The first line must be a valid hero reference\n (e.g. \"1 ALT_CORE_B_MU_01_C\")");
+    }
 
     return {
-        hero: decklist.split("\n", 1)[0].split(" ")[1].replace("COREKS", "CORE"),
+        hero: `ALT_CORE_B_${faction}_${id}_${rarity}`,
         cards: decklist.split("\n").slice(1).map((x) => ({ quantity: parseInt(x.split(" ")[0]), card: `/cards/${x.split(" ")[1]}` })),
         name: name,
         public: false
     }
 }
 
-browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-    console.log("Received message");
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "importDeck") {
-        console.log("Received importDeck action")
-        
-        let deck = parseDecklist(message.decklist, message.deckName, message);
-        console.log(deck)
 
-        try {
-            const token = await getNextAuthToken();
+        (async () => {
+            try {
+                let deck = parseDecklist(message.decklist, message.deckName);
 
-            deck.id = await createBaseDeck(deck, token);
+                const token = await getNextAuthToken();
+                deck.id = await createBaseDeck(deck, token);
+                await addCards(deck, token);
 
-            await addCards(deck, token);
+                sendResponse({ success: true, url: `http://altered.gg/decks/${deck.id}` });
+                return;
 
-            console.log("Deck imported successfully");
-            sendResponse({ success: true });
-        } catch (error) {
-            console.error("Error importing deck:", error);
-            sendResponse({ success: false, error: error.message });
-        }
+            } catch (error) {
+                console.error("Error importing deck:", error);
+                sendResponse({ success: false, msg: error.message });
+            }
+        })();
+
+        return true;
     }
     return false;
 });

@@ -17,16 +17,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         const currentTab = tabs[0];
         const currentUrl = new URL(currentTab.url);
 
-        let errorContainer = document.getElementById("error-container");
+        let invalidLocationContainer = document.getElementById("invalid-location-container");
         let mainContainer = document.getElementById("main-container");
+        let errorContainer = document.getElementById("error-container");
 
         if (currentUrl.hostname.includes(ALLOWED_DOMAINS)) {
-            errorContainer.classList.add("d-none");
+            invalidLocationContainer.classList.add("d-none");
             mainContainer.classList.remove("d-none");
         } else {
-            errorContainer.classList.remove("d-none");
+            invalidLocationContainer.classList.remove("d-none");
             mainContainer.classList.add("d-none");
         }
+        errorContainer.classList.add("d-none");
     });
 
     importButton.addEventListener("click", async () => {
@@ -34,7 +36,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const decklistEl = document.getElementById("decklist-text");
         let isInvalid = false;
 
-        if (deckNameEl.value.trim() === "") {
+        let decklist = decklistEl.value.trim();
+        let deckName = deckNameEl.value.trim();
+
+        if (deckName === "") {
             deckNameEl.classList.add("is-invalid");
             deckNameEl.classList.remove("is-valid");
             isInvalid = true;
@@ -43,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             deckNameEl.classList.remove("is-invalid");
         }
 
-        if (decklistEl.value.trim() === "") {
+        if (decklist === "") {
             decklistEl.classList.add("is-invalid");
             decklistEl.classList.remove("is-valid");
             isInvalid = true;
@@ -56,39 +61,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            console.log(tabs);
-            console.log("decklist: " + decklistEl.value)
-            const currentTab = tabs[0];
+        browser.runtime.sendMessage({
+            action: 'importDeck', decklist: decklist, deckName: deckName
+        }).then(response => {
+            if (response.success === true) {
+                chrome.tabs.create({ url: response.url });
+            } else {
+                let errorContainer = document.getElementById("error-container");
+                let errorMsg = document.getElementById("error-msg");
 
-            browser.scripting.executeScript({
-                target: { tabId: currentTab.id },
-                func: importDeck,
-                args: [decklistEl.value, deckNameEl.value]
-            }).then(() => {
-                console.log("Script executed successfully")
-            }).catch((error) => {
-                console.error("Error executing script: ", error);
-            });
+                errorMsg.innerText = response.msg;
+                errorContainer.classList.remove("d-none");
+            }
+        }).catch(error => {
+            console.error("Error sending message:", error);
         });
     });
 });
-
-async function importDeck(decklistText, deckName) {
-
-    console.log("inside:" + decklistText);
-    console.log("deck name: " + deckName);
-
-    if (typeof browser === "undefined") {
-        var browser = chrome;
-    }
-
-    browser.runtime.sendMessage({
-        action: 'importDeck', decklist: decklistText, deckName: deckName
-    }).then(response => {
-        console.log("Response from background script:", response);
-    }).catch(error => {
-        console.error("Error sending message:", error);
-    });
-    console.log("message sent");
-}
