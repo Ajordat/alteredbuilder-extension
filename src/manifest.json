@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Altered TCG Builder",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Import decks from the Altered TCG Builder to the official website",
     "permissions": [
         "scripting",
