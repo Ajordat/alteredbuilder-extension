@@ -20,13 +20,13 @@ jobs:
         run: npm install
 
       - name: Create dist folder
-        run: npm run build
+        run: npm run build:chrome
 
       - uses: vimtor/action-zip@v1.2
         with:
           files: dist/
           recursive: true
-          dest: release.zip
+          dest: release-chrome.zip
 
       - name: Upload to Chrome Web Store
         uses: mobilefirstllc/cws-publish@latest
@@ -36,4 +36,4 @@ jobs:
           client_secret: ${{ secrets.CLIENT_SECRET }}
           refresh_token: ${{ secrets.REFRESH_TOKEN }}
           extension_id: ${{ secrets.EXTENSION_ID }}
-          zip_file: 'release.zip'
+          zip_file: 'release-chrome.zip'

@@ -2,6 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const targetBrowser = process.env.BROWSER || "chrome";
+
 module.exports = {
     entry: {
         popup: './src/popup.js', // Entry point for popup script
@@ -31,7 +33,7 @@ module.exports = {
         }),
         new CopyWebpackPlugin({
             patterns: [
-                { from: 'src/manifest.json', to: 'manifest.json' }, // Copy manifest
+                { from: `src/manifest.${targetBrowser}.json`, to: 'manifest.json' }, // Copy manifest
                 { from: 'src/assets', to: 'assets' }, // Copy assets like icons
             ],
         }),

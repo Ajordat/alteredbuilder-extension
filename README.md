@@ -1,6 +1,24 @@
 # Altered TCG Builder - Browser Extension
 
+![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/fhagbomlpphplemfbeiokgaiiknggpgh?link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Faltered-tcg-builder%2Ffhagbomlpphplemfbeiokgaiiknggpgh)
+
+
 The purpose of this extension is to facilitate the integration of third-party tools with the official [Altered TCG website][1]. Currently, its only functionality is to take a decklist generated externally and import it into the official website.
+
+Links:
+* [Github Repository][4]
+* [Chrome Web Store][3]
+
+---
+
+**Table of Contents**
+1. [Disclaimer](#disclaimer)
+2. [Development](#development)
+   1. [Initial setup](#initial-setup)
+   2. [Chrome](#chrome)
+   3. [Firefox](#firefox)
+3. [Publishment](#publishment)
+
 
 
 ## Disclaimer
@@ -12,23 +30,54 @@ To ensure complete transparency, the extension's code is open-source and license
 
 ## Development
 
-1. Install npm
-2. Build the extension with:
+### Initial setup
+
+1. [Install npm][5]
+2. Install the npm dependencies with:
    ```
-   npm run build
+   npm install
+   ```
+
+After the initial setup, developing for Chrome or Firefox has its differences:
+
+### Chrome
+
+3. Build the extension with:
+   ```
+   npm run build:chrome
    ```
    This command creates the `dist/` folder with the source code bundled.
-3. In Google Chrome, go to `chrome://extensions/` and enable the developer mode (top right corner).
-4. Click on `Load unpacked` and select the `dist/` folder.
+4. In Google Chrome, go to `chrome://extensions/` and enable the developer mode (top right corner).
+5. Click on `Load unpacked` and select the `dist/` folder.
 
 With these steps, the extension will be "installed" in the browser.
 
-Nevertheless, instead of manually building the extension with every change, the recommended way to develop is to run:
+Nevertheless, instead of manually building the extension with every change (step 3), the recommended way to develop is to run:
 ```
 npm run watch
 ```
 The above command will watch the source code and will hot-reload the bundle every time it detects a change on any file. *Usually* the browser also realizes that there's been a change and updates it as well.
 
+### Firefox
+
+3. Build the extension with:
+   ```
+   npm run build:firefox
+   ```
+   This command creates the `dist/` folder with the source code bundled.
+4. **Manually** generate a zip file from the contents of the `dist/` folder. Do it with the contents of the folder, not the folder itself.
+   
+   Yes, I know: I should automate this with npm.
+5. Go to `about:debugging` and then "This Firefox".
+6. Click on `Load Temporary Add-on...` and select the zip file generated in step 4.
+
+With these steps, the extension will be "installed" in the browser.
+
+Nevertheless, instead of doing all those steps every time, the recommended way to develop is to run:
+```
+npm run start:firefox
+```
+The above command will start a sandboxed version of Firefox and should hot-reload the extension with every changed file on the `dist/` folder. This means that running `npm run build:firefox` is mandatory to refresh the changes.
 
 ## Publishment
 
@@ -39,3 +88,6 @@ Currently a new revision is uploaded every time there's a commit in the master b
 
 [1]: https://www.altered.gg/
 [2]: https://github.com/Ajordat/alteredbuilder-extension/blob/master/.github/workflows/publish.yaml
+[3]: https://chromewebstore.google.com/detail/altered-tcg-builder/fhagbomlpphplemfbeiokgaiiknggpgh
+[4]: https://github.com/Ajordat/alteredbuilder-extension
+[5]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
