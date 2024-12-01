@@ -4,7 +4,6 @@
     "version": "1.0.2",
     "description": "Import decks from the Altered TCG Builder to the official website",
     "permissions": [
-        "scripting",
         "activeTab"
     ],
     "host_permissions": [
