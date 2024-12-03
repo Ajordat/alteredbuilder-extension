@@ -1,6 +1,8 @@
 # Altered TCG Builder - Browser Extension
 
-![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/fhagbomlpphplemfbeiokgaiiknggpgh?link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Faltered-tcg-builder%2Ffhagbomlpphplemfbeiokgaiiknggpgh)
+![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/fhagbomlpphplemfbeiokgaiiknggpgh?logo=chromewebstore)
+![Mozilla Add-on Version](https://img.shields.io/amo/v/altered-tcg-builder?logo=firefox)
+
 
 
 The purpose of this extension is to facilitate the integration of third-party tools with the official [Altered TCG website][1]. Currently, its only functionality is to take a decklist generated externally and import it into the official website.
