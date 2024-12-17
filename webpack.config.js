@@ -35,6 +35,7 @@ module.exports = {
             patterns: [
                 { from: `src/manifest.${targetBrowser}.json`, to: 'manifest.json' }, // Copy manifest
                 { from: 'src/assets', to: 'assets' }, // Copy assets like icons
+                { from: 'src/libs', to: 'libs' }
             ],
         }),
     ],
