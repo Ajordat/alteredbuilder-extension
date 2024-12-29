@@ -22,7 +22,7 @@
                     </a>
                     <div class="navbar-nav">
                         <a class="nav-link active" id="nav-import" href="#">Import Deck</a>
-                        <a class="nav-link" id="nav-collection" href="#">Extract Collection</a>
+                        <a class="nav-link" id="nav-collection" href="#">Export Collection</a>
                     </div>
                 </div>
             </nav>
@@ -72,22 +72,27 @@
                 </div>
 
                 <div id="content-collection" class="d-none">
-                    <h1>Collection Extractor</h1>
-                    <a id="parse-collection" class="btn mt-3">Extract collection</a>
-                    <div class="progress mt-3">
-                        <div 
-                            id="extractor-progress-bar" 
-                            class="progress-bar progress-bar-striped" 
-                            role="progressbar" 
-                            style="width: 0%;" 
-                            aria-valuenow="0" 
-                            aria-valuemin="0" 
-                            aria-valuemax="100">
-                            0%
+                    <h1>Collection Exporter</h1>
+                    <a id="parse-collection" class="btn mt-3">Export</a>
+                    <div id="collection-progress-div" class="d-none">
+                        <div class="progress mt-3">
+                            <div id="extractor-progress-bar" class="progress-bar progress-bar-striped" role="progressbar"
+                                style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                0%
+                            </div>
                         </div>
                     </div>
-                    <textarea id="parsed-collection" class="form-control mt-3" rows="7" placeholder="Your collection will appear here"></textarea>
-                    <a id="copy-collection" class="btn mt-2">Copy to Clipboard</a>
+                    <div id="collection-result-div" class="d-none">
+                        <textarea id="parsed-collection" class="form-control mt-3" rows="7"
+                            placeholder="Your collection will appear here" readonly></textarea>
+                        <a id="copy-collection" class="btn mt-2">Copy to Clipboard</a>
+                        <!-- <div class="mt-3">
+                            <label for="encoded-collection" class="encoded-collection-label">Encoded Collection</label>
+                            <input id="encoded-collection" type="text" class="form-control" readonly>
+                        </div>
+                        <a id="copy-encoded-collection" class="btn mt-2">Copy to Clipboard</a> -->
+                    </div>
+
                 </div>
 
             </div>

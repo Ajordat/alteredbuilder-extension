@@ -102,6 +102,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     extractButton.addEventListener("click", async () => {
         const port = browser.runtime.connect({ name: "extract-collection-cnx" });
         const progressBar = document.getElementById("extractor-progress-bar");
+        const progressDiv = document.getElementById("collection-progress-div");
+        const resultDiv = document.getElementById("collection-result-div");
+
+        progressDiv.classList.remove("d-none");
+        resultDiv.classList.add("d-none");
         progressBar.classList.add("progress-bar-animated");
 
         port.postMessage({ action: "extractCollection" });
@@ -111,8 +116,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (message.step === "response") {
                 if (message.success === true) {
                     document.getElementById("parsed-collection").value = message.collection;
+                    // document.getElementById("encoded-collection").value = message.short;
                     progressBar.classList.remove("progress-bar-animated");
                 }
+                progressDiv.classList.add("d-none");
+                resultDiv.classList.remove("d-none");
             } else if (message.step === "progress") {
                 let value = message.value;
                 progressBar.style.width = `${value}%`;
@@ -124,10 +132,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("copy-collection").addEventListener("click", () => {
         const textarea = document.getElementById("parsed-collection");
-
-        // Copy to clipboard
         navigator.clipboard.writeText(textarea.value).then(() => {
-            alert("Decklist copied to clipboard!");
+            alert("Collection copied to clipboard!");
+        }).catch(err => {
+            console.error("Failed to copy text: ", err);
+        });
+    });
+    document.getElementById("copy-encoded-collection").addEventListener("click", () => {
+        const textarea = document.getElementById("encoded-collection");
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            alert("Encoded collection copied to clipboard!");
         }).catch(err => {
             console.error("Failed to copy text: ", err);
         });

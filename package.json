@@ -25,6 +25,7 @@
         "webpack-merge": "^6.0.1"
     },
     "dependencies": {
+        "altered-deckfmt": "0.2.1",
         "bootstrap": "^5.3.3"
     }
 }

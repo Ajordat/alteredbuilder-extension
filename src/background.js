@@ -1,3 +1,6 @@
+import { encodeList } from "altered-deckfmt";
+
+
 if (typeof browser === "undefined") {
     var browser = chrome;
 }
@@ -80,7 +83,7 @@ function parseDecklist(decklist, name, actions) {
 
 async function fetchPartialCollection(itemsPerPage, pageIndex, accessToken) {
 
-    const response = await fetch(`https://api.altered.gg/cards/stats?collection=true&itemsPerPage=${itemsPerPage}&page=${pageIndex}`, {
+    const response = await fetch(`https://api.altered.gg/cards/stats?collection=true&itemsPerPage=${itemsPerPage}&page=${pageIndex}&cardType[]=SPELL&cardType[]=PERMANENT&cardType[]=CHARACTER&cardType[]=HERO`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -125,6 +128,7 @@ async function extractCollection(accessToken, port) {
         for (const card of page) {
             collection[card["reference"]] = card["inMyCollection"];
         }
+        // break;
     }
 
     return collection;
@@ -171,7 +175,10 @@ browser.runtime.onConnect.addListener((port) => {
 
                     let text = formatCollection(collection);
 
-                    port.postMessage({ step: "response", success: true, collection: text });
+                    port.postMessage({
+                        step: "response", success: true, collection: text,
+                        // short: encodeList(text)
+                    });
 
                 } catch (error) {
                     console.error("Error extracting collection:", error);
