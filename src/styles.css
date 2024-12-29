@@ -1,4 +1,3 @@
-
 :root {
     --bg-color: #FFFEFC;
     --color: #3D331D;
@@ -18,13 +17,16 @@ body {
     border-radius: var(--cta-border-radius);
     --bs-border-color: var(--cta-border-color);
 }
+
 textarea.form-control {
     border-bottom-right-radius: 0;
 }
+
 input.form-check-input {
     border: var(--bs-border-width) solid var(--cta-border-color);
     color: var(--bg-color);
 }
+
 input.form-check-input:checked {
     background-color: var(--cta-border-color);
     border-color: var(--cta-border-color);
@@ -41,4 +43,21 @@ a.btn:hover {
     background-color: var(--btn-bg-color);
     opacity: 0.9;
     box-shadow: 0 0 8px var(--btn-bg-color);
+}
+
+.navbar {
+    padding: 0.5rem 1rem;
+}
+
+.navbar-brand {
+    font-size: 1rem;
+}
+
+.navbar-nav .nav-link {
+    font-size: 0.9rem;
+}
+
+.progress-bar {
+    background-color: var(--btn-bg-color);
+    color: var(--color);
 }
