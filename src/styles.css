@@ -32,14 +32,18 @@ input.form-check-input:checked {
     border-color: var(--cta-border-color);
 }
 
-
-a.btn {
+a.btn, a.nav-link.active {
     border-radius: var(--cta-border-radius);
     background-color: var(--btn-bg-color);
     transition: 0.1s;
 }
 
-a.btn:hover {
+a.nav-link {
+    border-radius: var(--cta-border-radius);
+    transition: 0.1s;
+}
+
+a.btn:hover, a.nav-link:hover {
     background-color: var(--btn-bg-color);
     opacity: 0.9;
     box-shadow: 0 0 8px var(--btn-bg-color);

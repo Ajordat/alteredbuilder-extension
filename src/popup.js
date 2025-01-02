@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const progressDiv = document.getElementById("collection-progress-div");
         const resultDiv = document.getElementById("collection-result-div");
 
+        extractButton.disabled = true;
         progressDiv.classList.remove("d-none");
         resultDiv.classList.add("d-none");
         progressBar.classList.add("progress-bar-animated");
@@ -121,6 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
                 progressDiv.classList.add("d-none");
                 resultDiv.classList.remove("d-none");
+                extractButton.disabled = false;
             } else if (message.step === "progress") {
                 let value = message.value;
                 progressBar.style.width = `${value}%`;
@@ -133,18 +135,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("copy-collection").addEventListener("click", () => {
         const textarea = document.getElementById("parsed-collection");
         navigator.clipboard.writeText(textarea.value).then(() => {
-            alert("Collection copied to clipboard!");
+            const copyFeedbackEl = document.getElementById("copy-collection-feedback");
+            copyFeedbackEl.classList.remove("d-none");
+            setTimeout(() => {
+                copyFeedbackEl.classList.add("d-none");
+            }, 2000);
         }).catch(err => {
             console.error("Failed to copy text: ", err);
         });
     });
-    document.getElementById("copy-encoded-collection").addEventListener("click", () => {
-        const textarea = document.getElementById("encoded-collection");
-        navigator.clipboard.writeText(textarea.value).then(() => {
-            alert("Encoded collection copied to clipboard!");
-        }).catch(err => {
-            console.error("Failed to copy text: ", err);
-        });
-    });
+    // document.getElementById("copy-encoded-collection").addEventListener("click", () => {
+    //     const textarea = document.getElementById("encoded-collection");
+    //     navigator.clipboard.writeText(textarea.value).then(() => {
+    //         alert("Encoded collection copied to clipboard!");
+    //     }).catch(err => {
+    //         console.error("Failed to copy text: ", err);
+    //     });
+    // });
 
 });
