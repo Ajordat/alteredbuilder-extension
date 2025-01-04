@@ -9,16 +9,36 @@ if (typeof browser === "undefined") {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    let importButton = document.getElementById("import-button");
+    const importButton = document.getElementById("import-button");
+    const extractButton = document.getElementById("parse-collection");
+
+    const navImport = document.getElementById("nav-import");
+    const navOther = document.getElementById("nav-collection");
+    const contentImport = document.getElementById("content-import");
+    const contentCollection = document.getElementById("content-collection");
+
+    navImport.addEventListener("click", () => {
+        contentImport.classList.remove("d-none");
+        contentCollection.classList.add("d-none");
+        navImport.classList.add("active");
+        navOther.classList.remove("active");
+    });
+
+    navOther.addEventListener("click", () => {
+        contentCollection.classList.remove("d-none");
+        contentImport.classList.add("d-none");
+        navOther.classList.add("active");
+        navImport.classList.remove("active");
+    });
 
     browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
         const currentTab = tabs[0];
         const currentUrl = new URL(currentTab.url);
 
-        let invalidLocationContainer = document.getElementById("invalid-location-container");
-        let mainContainer = document.getElementById("main-container");
-        let errorContainer = document.getElementById("error-container");
+        const invalidLocationContainer = document.getElementById("invalid-location-container");
+        const mainContainer = document.getElementById("main-container");
+        const errorContainer = document.getElementById("error-container");
 
         if (currentUrl.hostname.includes(ALLOWED_DOMAINS)) {
             invalidLocationContainer.classList.add("d-none");
@@ -31,6 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     importButton.addEventListener("click", async () => {
+        console.log("import button listener ready")
         const deckNameEl = document.getElementById("deck-name");
         const decklistEl = document.getElementById("decklist-text");
         const excludeUniquesEl = document.getElementById("exclude-uniques");
@@ -62,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         browser.runtime.sendMessage({
-            action: 'importDeck', decklist: decklist, deckName: deckName, actions: {excludeUniques: excludeUniquesEl.checked }
+            action: 'importDeck', decklist: decklist, deckName: deckName, actions: { excludeUniques: excludeUniquesEl.checked }
         }).then(response => {
             if (response.success === true) {
                 chrome.tabs.create({ url: response.url });
@@ -77,4 +98,59 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Error sending message:", error);
         });
     });
+
+    extractButton.addEventListener("click", async () => {
+        const port = browser.runtime.connect({ name: "extract-collection-cnx" });
+        const progressBar = document.getElementById("extractor-progress-bar");
+        const progressDiv = document.getElementById("collection-progress-div");
+        const resultDiv = document.getElementById("collection-result-div");
+
+        extractButton.disabled = true;
+        progressDiv.classList.remove("d-none");
+        resultDiv.classList.add("d-none");
+        progressBar.classList.add("progress-bar-animated");
+
+        port.postMessage({ action: "extractCollection" });
+
+        port.onMessage.addListener((message) => {
+            console.log("received message", message);
+            if (message.step === "response") {
+                if (message.success === true) {
+                    document.getElementById("parsed-collection").value = message.collection;
+                    // document.getElementById("encoded-collection").value = message.short;
+                    progressBar.classList.remove("progress-bar-animated");
+                }
+                progressDiv.classList.add("d-none");
+                resultDiv.classList.remove("d-none");
+                extractButton.disabled = false;
+            } else if (message.step === "progress") {
+                let value = message.value;
+                progressBar.style.width = `${value}%`;
+                progressBar.setAttribute("aria-valuenow", value);
+                progressBar.textContent = `${Math.floor(value)}%`;
+            }
+        })
+    });
+
+    document.getElementById("copy-collection").addEventListener("click", () => {
+        const textarea = document.getElementById("parsed-collection");
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            const copyFeedbackEl = document.getElementById("copy-collection-feedback");
+            copyFeedbackEl.classList.remove("d-none");
+            setTimeout(() => {
+                copyFeedbackEl.classList.add("d-none");
+            }, 2000);
+        }).catch(err => {
+            console.error("Failed to copy text: ", err);
+        });
+    });
+    // document.getElementById("copy-encoded-collection").addEventListener("click", () => {
+    //     const textarea = document.getElementById("encoded-collection");
+    //     navigator.clipboard.writeText(textarea.value).then(() => {
+    //         alert("Encoded collection copied to clipboard!");
+    //     }).catch(err => {
+    //         console.error("Failed to copy text: ", err);
+    //     });
+    // });
+
 });
