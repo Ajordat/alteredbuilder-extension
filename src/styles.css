@@ -8,7 +8,7 @@
 
 body {
     font-family: "Gabriela", Verdana, Tahoma, Geneva, sans-serif;
-    min-width: 450px;
+    width: 450px;
     background-color: var(--bg-color);
     color: var(--color);
 }
