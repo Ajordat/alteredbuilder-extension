@@ -83,7 +83,7 @@ function parseDecklist(decklist, name, actions) {
 
 async function fetchPartialCollection(itemsPerPage, pageIndex, accessToken) {
 
-    const response = await fetch(`https://api.altered.gg/cards/stats?collection=true&itemsPerPage=${itemsPerPage}&page=${pageIndex}&cardType[]=SPELL&cardType[]=PERMANENT&cardType[]=CHARACTER&cardType[]=HERO`, {
+    const response = await fetch(`https://api.altered.gg/cards/stats?collection=true&itemsPerPage=${itemsPerPage}&page=${pageIndex}&cardType[]=SPELL&cardType[]=PERMANENT&cardType[]=CHARACTER&cardType[]=HERO&cardType[]=EXPEDITION_PERMANENT&cardType[]=LANDMARK_PERMANENT`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
