@@ -81,9 +81,9 @@ function parseDecklist(decklist, name, actions) {
     }
 }
 
-async function fetchPartialCollection(itemsPerPage, pageIndex, accessToken) {
+async function fetchPartialCollection(itemsPerPage, pageIndex, faction, accessToken) {
 
-    const response = await fetch(`https://api.altered.gg/cards/stats?collection=true&itemsPerPage=${itemsPerPage}&page=${pageIndex}&cardType[]=SPELL&cardType[]=PERMANENT&cardType[]=CHARACTER&cardType[]=HERO&cardType[]=EXPEDITION_PERMANENT&cardType[]=LANDMARK_PERMANENT`, {
+    const response = await fetch(`https://api.altered.gg/cards/stats?collection=true&itemsPerPage=${itemsPerPage}&page=${pageIndex}&factions[]=${faction}&cardType[]=SPELL&cardType[]=PERMANENT&cardType[]=CHARACTER&cardType[]=HERO&cardType[]=EXPEDITION_PERMANENT&cardType[]=LANDMARK_PERMANENT`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -99,23 +99,27 @@ async function fetchPartialCollection(itemsPerPage, pageIndex, accessToken) {
 }
 
 function collectionIterator(itemsPerPage, accessToken, port) {
-    let currentPage = 1;
-    let lastPage = 1;
 
     return {
         async *[Symbol.asyncIterator]() {
-            do {
-                const collectionPage = await fetchPartialCollection(itemsPerPage, currentPage, accessToken);
+            const factions = ["AX", "BR", "LY", "MU", "OR", "YZ"];
 
-                yield collectionPage["hydra:member"];
+            for (const [index, faction] of factions.entries()) {
+                let currentPage = 1;
+                let lastPage = 1;
+                do {
+                    const collectionPage = await fetchPartialCollection(itemsPerPage, currentPage, faction, accessToken);
 
-                let totalItems = collectionPage["hydra:totalItems"];
-                lastPage = Math.ceil(totalItems / itemsPerPage);
+                    yield collectionPage["hydra:member"];
 
-                port.postMessage({ step: "progress", value: (currentPage / lastPage) * 100 });
+                    let totalItems = collectionPage["hydra:totalItems"];
+                    lastPage = Math.ceil(totalItems / itemsPerPage);
 
-                currentPage += 1;
-            } while (currentPage <= lastPage);
+                    port.postMessage({ step: "progress", value: ((currentPage + lastPage * index) / (lastPage * factions.length)) * 100 });
+
+                    currentPage += 1;
+                } while (currentPage <= lastPage);
+            }
         }
     }
 }
@@ -126,7 +130,8 @@ async function extractCollection(accessToken, port) {
 
     for await (const page of collectionPage) {
         for (const card of page) {
-            collection[card["reference"]] = card["inMyCollection"];
+            let reference = card["@id"].split("/").at(-1)
+            collection[reference] = card["inMyCollection"];
         }
         // break;
     }
