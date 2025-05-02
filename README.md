@@ -10,6 +10,7 @@ The purpose of this extension is to facilitate the integration of third-party to
 Links:
 * [Github Repository][4]
 * [Chrome Web Store][3]
+* [Firefox Add-ons][6]
 
 ---
 
@@ -93,3 +94,4 @@ Currently a new revision is uploaded every time there's a commit in the master b
 [3]: https://chromewebstore.google.com/detail/altered-tcg-builder/fhagbomlpphplemfbeiokgaiiknggpgh
 [4]: https://github.com/Ajordat/alteredbuilder-extension
 [5]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
+[6]: https://addons.mozilla.org/en-US/firefox/addon/altered-tcg-builder/
