@@ -9,6 +9,7 @@
 body {
     font-family: "Gabriela", Verdana, Tahoma, Geneva, sans-serif;
     width: 450px;
+    height: 600px;
     background-color: var(--bg-color);
     color: var(--color);
 }
@@ -36,6 +37,13 @@ a.btn, a.nav-link.active {
     border-radius: var(--cta-border-radius);
     background-color: var(--btn-bg-color);
     transition: 0.1s;
+}
+
+.btn-group .btn {
+    --bs-btn-active-bg: var(--btn-bg-color);
+    --bs-btn-border-color: var(--cta-border-color);
+    --bs-btn-active-border-color: var(--bs-btn-border-color);
+    --bs-btn-border-radius: var(--cta-border-radius);
 }
 
 a.nav-link {

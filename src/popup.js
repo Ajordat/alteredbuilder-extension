@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const deckNameEl = document.getElementById("deck-name");
         const decklistEl = document.getElementById("decklist-text");
         const excludeUniquesEl = document.getElementById("exclude-uniques");
+        const gameModeEl = document.querySelector('input[name="gameMode"]:checked');
         let isInvalid = false;
 
         let decklist = decklistEl.value.trim();
@@ -83,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         browser.runtime.sendMessage({
-            action: 'importDeck', decklist: decklist, deckName: deckName, actions: { excludeUniques: excludeUniquesEl.checked }
+            action: 'importDeck', decklist: decklist, deckName: deckName, actions: { excludeUniques: excludeUniquesEl.checked }, gameMode: gameModeEl.value
         }).then(response => {
             if (response.success === true) {
                 chrome.tabs.create({ url: response.url });

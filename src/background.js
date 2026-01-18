@@ -38,7 +38,7 @@ async function createBaseDeck(deck, accessToken) {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ alterator: `/cards/${deck.hero}`, name: deck.name, public: deck.public }),
+        body: JSON.stringify({ alterator: `/cards/${deck.hero}`, name: deck.name, public: deck.public, eventFormat: deck.gameMode }),
     });
 
     if (!response.ok) {
@@ -65,7 +65,7 @@ async function addCards(deck, accessToken) {
     }
 }
 
-function parseDecklist(decklist, name, actions) {
+function parseDecklist(decklist, name, actions, gameMode) {
 
     // Convert the hero to the CORE set
     let [faction, id, rarity] = decklist.split("\n", 1)[0].split("_").slice(3);
@@ -84,7 +84,8 @@ function parseDecklist(decklist, name, actions) {
         hero: `ALT_${HEROES[id]}_B_${faction}_${id}_${rarity}`,
         cards: cardEntries.map((x) => ({ quantity: parseInt(x.split(" ")[0]), card: `/cards/${x.split(" ")[1]}` })),
         name: name,
-        public: false
+        public: false,
+        gameMode: gameMode
     }
 }
 
@@ -156,7 +157,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         (async () => {
             try {
-                let deck = parseDecklist(message.decklist, message.deckName, message.actions);
+                let deck = parseDecklist(message.decklist, message.deckName, message.actions, message.gameMode);
 
                 const token = await getNextAuthToken();
                 deck.id = await createBaseDeck(deck, token);
