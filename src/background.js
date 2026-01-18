@@ -14,7 +14,8 @@ const HEROES = {
     "01": "CORE",
     "02": "CORE",
     "03": "CORE",
-    "65": "CYCLONE"
+    "65": "CYCLONE",
+    "85": "DUSTER"
 }
 
 async function getNextAuthToken() {
