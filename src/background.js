@@ -9,7 +9,13 @@ browser.runtime.onInstalled.addListener(() => {
     console.log("Deck Importer Extension Installed!");
 });
 
-const MAX_ITEMS_PER_PAGE = 36;
+const MAX_ITEMS_PER_PAGE = 72;
+const HEROES = {
+    "01": "CORE",
+    "02": "CORE",
+    "03": "CORE",
+    "65": "CYCLONE"
+}
 
 async function getNextAuthToken() {
     const response = await fetch("https://www.altered.gg/api/auth/session", { credentials: "include" });
@@ -63,7 +69,7 @@ function parseDecklist(decklist, name, actions) {
     // Convert the hero to the CORE set
     let [faction, id, rarity] = decklist.split("\n", 1)[0].split("_").slice(3);
 
-    if (!["01", "02", "03"].includes(id) || rarity !== "C") {
+    if (!(id in HEROES) || rarity !== "C") {
         console.error(`Invalid hero code ${decklist.split("\n", 1)[0].split(" ")[1]}`);
         throw new Error("The first line must be a valid hero reference\n(e.g. \"1 ALT_CORE_B_MU_01_C\")");
     }
@@ -74,7 +80,7 @@ function parseDecklist(decklist, name, actions) {
     }
 
     return {
-        hero: `ALT_CORE_B_${faction}_${id}_${rarity}`,
+        hero: `ALT_${HEROES[id]}_B_${faction}_${id}_${rarity}`,
         cards: cardEntries.map((x) => ({ quantity: parseInt(x.split(" ")[0]), card: `/cards/${x.split(" ")[1]}` })),
         name: name,
         public: false
