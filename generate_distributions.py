@@ -16,7 +16,7 @@ def run_command(cmd, cwd=BASE_DIR):
     print(f"> {cmd}")
     result = subprocess.run(cmd, shell=True, cwd=cwd)
     if result.returncode != 0:
-        raise RuntimeError(f"Command failed: {cmd}")
+        raise RuntimeError(f"Command failed with exit code {result.returncode}: {cmd}")
 
 
 def zip_folder(source_dir, output_zip):

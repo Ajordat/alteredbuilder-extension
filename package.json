@@ -1,6 +1,6 @@
 {
     "name": "alteredbuilder-extension",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "description": "Import decks from the Altered TCG Builder to the official website",
     "main": "index.js",
     "scripts": {
